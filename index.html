@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Music Player</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Barra lateral estilo Spotify -->
+        <aside class="sidebar">
+            <h2>🎧 MyMusic</h2>
+            <ul>
+                <li>Inicio</li>
+                <li>Biblioteca</li>
+                <li>Listas de reproducción</li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <!-- Barra de búsqueda -->
+            <div class="search-bar">
+                <input type="text" id="searchQuery" placeholder="Buscar canciones o artistas...">
+                <button id="searchBtn">🔍</button>
+            </div>
+
+            <!-- Resultados de búsqueda -->
+            <div class="search-results" id="searchResults">
+                <!-- Aquí aparecerán las canciones encontradas en YouTube -->
+            </div>
+
+            <!-- Reproductor -->
+            <div class="player-area">
+                <div id="player"></div> <!-- El reproductor de YouTube embebido -->
+                <div class="controls">
+                    <button id="prev">⏮️</button>
+                    <button id="playPause">⏯️</button>
+                    <button id="next">⏭️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

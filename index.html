@@ -1,48 +1,112 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Music Player</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>YouTube Search API Example</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #searchContainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: none;
+            background-color: #ff0000;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e60000;
+        }
+        #results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video {
+            margin: 10px;
+            text-align: center;
+        }
+        .video img {
+            width: 200px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Barra lateral estilo Spotify -->
-        <aside class="sidebar">
-            <h2>🎧 MyMusic</h2>
-            <ul>
-                <li>Inicio</li>
-                <li>Biblioteca</li>
-                <li>Listas de reproducción</li>
-            </ul>
-        </aside>
-
-        <div class="main-content">
-            <!-- Barra de búsqueda -->
-            <div class="search-bar">
-                <input type="text" id="searchQuery" placeholder="Buscar canciones o artistas...">
-                <button id="searchBtn">🔍</button>
-            </div>
-
-            <!-- Resultados de búsqueda -->
-            <div class="search-results" id="searchResults">
-                <!-- Aquí aparecerán las canciones encontradas en YouTube -->
-            </div>
-
-            <!-- Reproductor -->
-            <div class="player-area">
-                <div id="player"></div> <!-- El reproductor de YouTube embebido -->
-                <div class="controls">
-                    <button id="prev">⏮️</button>
-                    <button id="playPause">⏯️</button>
-                    <button id="next">⏭️</button>
-                </div>
-            </div>
-        </div>
+    <h1>YouTube Search API Integration</h1>
+    <div id="searchContainer">
+        <input type="text" id="searchInput" placeholder="Search YouTube" onkeypress="handleKeyPress(event)">
+        <button onclick="searchYouTube()">Search</button>
     </div>
+    <div id="results"></div>
 
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="script.js"></script>
+    <script>
+        const apiKey = 'YOUR_YOUTUBE_API_KEY'; // Reemplaza con tu API Key de YouTube
+        
+        function searchYouTube() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return; // No hacer nada si el campo está vacío
+
+            const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${apiKey}`;
+
+            fetch(apiUrl)
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  const resultsDiv = document.getElementById('results');
+                  resultsDiv.innerHTML = ''; // Limpiar resultados anteriores
+                  
+                  if (data.items.length === 0) {
+                      resultsDiv.innerHTML = '<p>No results found</p>';
+                      return;
+                  }
+
+                  data.items.forEach(item => {
+                      const videoTitle = item.snippet.title;
+                      const videoId = item.id.videoId; // Obtener el ID del video
+                      const videoThumbnail = item.snippet.thumbnails.default.url;
+
+                      resultsDiv.innerHTML += `
+                          <div class="video">
+                              <h3>${videoTitle}</h3>
+                              <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
+                                  <img src="${videoThumbnail}" alt="Video Thumbnail">
+                              </a>
+                          </div>`;
+                  });
+              })
+              .catch(error => console.error('Error fetching YouTube API:', error));
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchYouTube(); // Ejecutar búsqueda al presionar Enter
+            }
+        }
+    </script>
 </body>
 </html>

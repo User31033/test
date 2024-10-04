@@ -3,110 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Search API Example</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>YouTube Music Player</title>
     <style>
         body {
-            background-color: #121212;
-            color: white;
+            background-color: #1a1a1a;
+            color: #fff;
             font-family: Arial, sans-serif;
+            text-align: center;
             padding: 20px;
         }
-        h1 {
-            text-align: center;
-        }
-        #searchContainer {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        input[type="text"] {
-            width: 300px;
+        #searchInput {
             padding: 10px;
-            margin-right: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            padding: 10px 15px;
+            width: 60%;
             border-radius: 5px;
             border: none;
+        }
+        button {
+            padding: 10px;
             background-color: #ff0000;
+            border: none;
+            border-radius: 5px;
             color: white;
             cursor: pointer;
         }
         button:hover {
-            background-color: #e60000;
+            background-color: #cc0000;
         }
         #results {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            margin-top: 20px;
         }
         .video {
-            margin: 10px;
-            text-align: center;
+            margin: 15px;
+            display: inline-block;
         }
-        .video img {
-            width: 200px;
-            height: auto;
+        iframe {
+            width: 300px;
+            height: 170px;
+            border-radius: 10px;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <h1>YouTube Search API Integration</h1>
-    <div id="searchContainer">
-        <input type="text" id="searchInput" placeholder="Search YouTube" onkeypress="handleKeyPress(event)">
-        <button onclick="searchYouTube()">Search</button>
-    </div>
+
+    <h1>YouTube Music Player 🎵</h1>
+
+    <input type="text" id="searchInput" placeholder="Search for music...">
+    <button onclick="searchYouTube()">Search</button>
+
     <div id="results"></div>
 
+    <h2 id="currentTrack"></h2>
+    <div id="player"></div>
+
     <script>
-        const apiKey = 'YOUR_YOUTUBE_API_KEY'; // Reemplaza con tu API Key de YouTube
-        
+        const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu clave de API de YouTube
+
         function searchYouTube() {
             const query = document.getElementById('searchInput').value;
-            if (!query) return; // No hacer nada si el campo está vacío
-
-            const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${apiKey}`;
+            const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${apiKey}&maxResults=5&videoCategoryId=10`;
 
             fetch(apiUrl)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  const resultsDiv = document.getElementById('results');
-                  resultsDiv.innerHTML = ''; // Limpiar resultados anteriores
-                  
-                  if (data.items.length === 0) {
-                      resultsDiv.innerHTML = '<p>No results found</p>';
-                      return;
-                  }
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = ''; // Limpiar resultados anteriores
 
-                  data.items.forEach(item => {
-                      const videoTitle = item.snippet.title;
-                      const videoId = item.id.videoId; // Obtener el ID del video
-                      const videoThumbnail = item.snippet.thumbnails.default.url;
+                    data.items.forEach(item => {
+                        const videoId = item.id.videoId;
+                        const videoTitle = item.snippet.title;
+                        const videoThumbnail = item.snippet.thumbnails.medium.url;
 
-                      resultsDiv.innerHTML += `
-                          <div class="video">
-                              <h3>${videoTitle}</h3>
-                              <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
-                                  <img src="${videoThumbnail}" alt="Video Thumbnail">
-                              </a>
-                          </div>`;
-                  });
-              })
-              .catch(error => console.error('Error fetching YouTube API:', error));
+                        const videoElement = `
+                            <div class="video" onclick="playVideo('${videoId}', '${videoTitle}')">
+                                <img src="${videoThumbnail}" alt="Thumbnail">
+                                <p>${videoTitle}</p>
+                            </div>
+                        `;
+                        resultsDiv.innerHTML += videoElement;
+                    });
+                })
+                .catch(error => console.log('Error fetching data from YouTube API:', error));
         }
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                searchYouTube(); // Ejecutar búsqueda al presionar Enter
-            }
+        function playVideo(videoId, title) {
+            const playerDiv = document.getElementById('player');
+            const currentTrack = document.getElementById('currentTrack');
+            currentTrack.textContent = `Playing: ${title}`;
+            playerDiv.innerHTML = `
+                <iframe width="560" height="315" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1"
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+                </iframe>
+            `;
         }
     </script>
+
 </body>
 </html>

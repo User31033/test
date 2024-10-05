@@ -1,103 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Music Player</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        #searchInput {
-            padding: 10px;
-            width: 60%;
-            border-radius: 5px;
-            border: none;
-        }
-        button {
-            padding: 10px;
-            background-color: #ff0000;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #cc0000;
-        }
-        #results {
-            margin-top: 20px;
-        }
-        .video {
-            margin: 15px;
-            display: inline-block;
-        }
-        iframe {
-            width: 300px;
-            height: 170px;
-            border-radius: 10px;
-            border: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escucha música con tu amigo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .results {
+      margin-top: 20px;
+    }
+    iframe {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Busca y escucha música con tu amigo 🎶</h1>
+    <input type="text" id="searchQuery" placeholder="Buscar canción...">
+    <button onclick="searchSong()">Buscar</button>
 
-    <h1>YouTube Music Player 🎵</h1>
+    <div class="results" id="results"></div>
 
-    <input type="text" id="searchInput" placeholder="Search for music...">
-    <button onclick="searchYouTube()">Search</button>
-
-    <div id="results"></div>
-
-    <h2 id="currentTrack"></h2>
     <div id="player"></div>
+  </div>
 
-    <script>
-        const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu clave de API de YouTube
-
-        function searchYouTube() {
-            const query = document.getElementById('searchInput').value;
-            const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&key=${apiKey}&maxResults=5&videoCategoryId=10`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const resultsDiv = document.getElementById('results');
-                    resultsDiv.innerHTML = ''; // Limpiar resultados anteriores
-
-                    data.items.forEach(item => {
-                        const videoId = item.id.videoId;
-                        const videoTitle = item.snippet.title;
-                        const videoThumbnail = item.snippet.thumbnails.medium.url;
-
-                        const videoElement = `
-                            <div class="video" onclick="playVideo('${videoId}', '${videoTitle}')">
-                                <img src="${videoThumbnail}" alt="Thumbnail">
-                                <p>${videoTitle}</p>
-                            </div>
-                        `;
-                        resultsDiv.innerHTML += videoElement;
-                    });
-                })
-                .catch(error => console.log('Error fetching data from YouTube API:', error));
-        }
-
-        function playVideo(videoId, title) {
-            const playerDiv = document.getElementById('player');
-            const currentTrack = document.getElementById('currentTrack');
-            currentTrack.textContent = `Playing: ${title}`;
-            playerDiv.innerHTML = `
-                <iframe width="560" height="315" 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1"
-                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-                </iframe>
-            `;
-        }
-    </script>
-
+  <script src="app.js"></script>
 </body>
 </html>

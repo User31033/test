@@ -1,80 +1,45 @@
-let player;
-let currentTrackIndex = 0;
-let tracks = []; // Almacenará los resultados de búsqueda de YouTube
-let isPlaying = false;
+const API_KEY = 'TU_API_KEY'; // Reemplaza con tu API Key de YouTube
 
-// Cargar la API de YouTube
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('player', {
-        height: '360',
-        width: '640',
-        videoId: '',
-        events: {
-            'onReady': onPlayerReady
-        }
-    });
+function searchSong() {
+  const query = document.getElementById('searchQuery').value;
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}&maxResults=5`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = ''; // Limpiar resultados anteriores
+
+      data.items.forEach(item => {
+        const videoId = item.id.videoId;
+        const title = item.snippet.title;
+        const thumbnail = item.snippet.thumbnails.default.url;
+
+        // Mostrar resultados con un enlace para compartir
+        const resultItem = `
+          <div>
+            <img src="${thumbnail}" alt="${title}">
+            <p>${title}</p>
+            <button onclick="playSong('${videoId}')">Reproducir</button>
+            <button onclick="shareSong('${videoId}')">Compartir con amigo</button>
+          </div>
+        `;
+        resultsDiv.innerHTML += resultItem;
+      });
+    })
+    .catch(error => console.error('Error al buscar canciones:', error));
 }
 
-function onPlayerReady(event) {
-    document.getElementById('playPause').addEventListener('click', playPause);
-    document.getElementById('next').addEventListener('click', nextTrack);
-    document.getElementById('prev').addEventListener('click', prevTrack);
+function playSong(videoId) {
+  const playerDiv = document.getElementById('player');
+  playerDiv.innerHTML = `
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  `;
 }
 
-// Búsqueda en YouTube
-document.getElementById('searchBtn').addEventListener('click', () => {
-    const query = document.getElementById('searchQuery').value;
-    searchYouTube(query);
-});
-
-function searchYouTube(query) {
-    gapi.client.setApiKey('AIzaSyBnWHeJSEkPKng4qShlwRjpgAwe_yO4DaI'); // Aquí va tu API Key de YouTube
-    gapi.client.load('youtube', 'v3', function() {
-        const request = gapi.client.youtube.search.list({
-            q: query,
-            part: 'snippet',
-            maxResults: 5
-        });
-
-        request.execute(function(response) {
-            const results = response.items;
-            const searchResults = document.getElementById('searchResults');
-            searchResults.innerHTML = '';
-
-            tracks = results.map((item, index) => {
-                const trackElement = document.createElement('div');
-                trackElement.innerText = item.snippet.title;
-                trackElement.addEventListener('click', () => loadTrack(index));
-                searchResults.appendChild(trackElement);
-                return item.id.videoId;
-            });
-        });
-    });
+// Compartir enlace de la canción con un amigo (puedes hacerlo manualmente o por chat)
+function shareSong(videoId) {
+  const url = `https://www.youtube.com/watch?v=${videoId}`;
+  alert(`Comparte este enlace con tu amigo: ${url}`);
 }
 
-// Cargar y reproducir una canción
-function loadTrack(index) {
-    player.loadVideoById(tracks[index]);
-    currentTrackIndex = index;
-    isPlaying = true;
-}
-
-// Funciones de control
-function playPause() {
-    if (isPlaying) {
-        player.pauseVideo();
-    } else {
-        player.playVideo();
-    }
-    isPlaying = !isPlaying;
-}
-
-function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-    loadTrack(currentTrackIndex);
-}
-
-function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    loadTrack(currentTrackIndex);
-}

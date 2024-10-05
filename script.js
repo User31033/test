@@ -1,4 +1,4 @@
-const API_KEY = 'TU_API_KEY'; // Reemplaza con tu API Key de YouTube
+const API_KEY = 'AIzaSyBnWHeJSEkPKng4qShlwRjpgAwe_yO4DaI'; // Tu clave API
 
 function searchSong() {
   const query = document.getElementById('searchQuery').value;
@@ -15,7 +15,7 @@ function searchSong() {
         const title = item.snippet.title;
         const thumbnail = item.snippet.thumbnails.default.url;
 
-        // Mostrar resultados con un enlace para compartir
+        // Mostrar los resultados con botones de "Reproducir" y "Compartir"
         const resultItem = `
           <div>
             <img src="${thumbnail}" alt="${title}">
@@ -37,9 +37,8 @@ function playSong(videoId) {
   `;
 }
 
-// Compartir enlace de la canción con un amigo (puedes hacerlo manualmente o por chat)
+// Compartir el enlace de la canción
 function shareSong(videoId) {
   const url = `https://www.youtube.com/watch?v=${videoId}`;
   alert(`Comparte este enlace con tu amigo: ${url}`);
 }
-

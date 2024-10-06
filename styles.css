@@ -1,80 +1,213 @@
+/* General */
 body {
-  font-family: 'Courier New', monospace;
-  text-align: center;
-  background-color: #121212; /* Fondo oscuro */
-  color: #00ffcc; /* Color de texto neón */
-  margin: 0;
-  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #0d0d0d; /* Fondo oscuro */
+  color: #fff; /* Texto blanco */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Altura de la vista */
+  margin: 0; /* Sin márgenes */
+  padding: 0; /* Sin relleno */
 }
 
 .container {
-  margin-top: 50px;
+  display: flex; /* Contenedor flexible */
+  justify-content: space-between; /* Espacio entre elementos */
+  width: 90%; /* Ancho del contenedor */
+  height: 90%; /* Alto del contenedor */
+  backdrop-filter: blur(10px); /* Efecto de desenfoque */
+  border-radius: 15px; /* Bordes redondeados */
+  background: rgba(255, 255, 255, 0.05); /* Fondo semitransparente */
+  overflow: hidden; /* Sin desbordamiento */
 }
 
-input[type="text"] {
-  padding: 10px;
-  width: 300px;
-  background-color: #1f1f1f; /* Fondo oscuro */
-  color: #00ffcc; /* Color del texto */
-  border: 2px solid #00ffcc; /* Borde neón */
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 255, 204, 0.7); /* Sombra neón */
-  outline: none;
+/* Estilo del reproductor de música */
+.music-player {
+  width: 30%; /* Ancho del reproductor */
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+  padding: 20px; /* Relleno */
+  border-radius: 15px; /* Bordes redondeados */
+  display: flex; /* Flexbox para centrar contenido */
+  flex-direction: column; /* Direccionar el contenido en columna */
+  justify-content: center; /* Centrar verticalmente */
+  align-items: center; /* Centrar horizontalmente */
+  text-align: center; /* Alinear texto al centro */
 }
 
-input[type="text"]::placeholder {
-  color: #00ffcc; /* Placeholder con color neón */
+.music-player .album-art {
+  width: 100%; /* Ancho del arte del álbum */
+  height: 300px; /* Alto del arte del álbum */
+  background-color: #1a1a1a; /* Fondo oscuro */
+  display: flex; /* Flexbox para centrar */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  margin-bottom: 20px; /* Margen inferior */
+  border-radius: 15px; /* Bordes redondeados */
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #1f1f1f; /* Fondo oscuro */
-  color: #00ffcc; /* Texto neón */
-  border: 2px solid #00ffcc; /* Borde neón */
-  border-radius: 5px;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0px 0px 15px rgba(0, 255, 204, 0.9), 0px 0px 30px rgba(0, 255, 204, 0.5); /* Efecto Bloom */
+.music-player #videoPlayer {
+  width: 100%; /* Ancho del reproductor de video */
+  height: 100%; /* Alto del reproductor de video */
+  border-radius: 10px; /* Bordes redondeados */
 }
 
-button:hover {
-  background-color: #00ffcc;
-  color: #1f1f1f;
-  box-shadow: 0px 0px 30px rgba(0, 255, 204, 1), 0px 0px 50px rgba(0, 255, 204, 0.8); /* Efecto neón más intenso al pasar el ratón */
+.music-player h2,
+.music-player p {
+  margin: 10px 0; /* Margen superior e inferior */
+  color: #ff00ff; /* Color del texto */
+}
+
+.timeline {
+  margin: 20px 0; /* Margen */
+  width: 100%; /* Ancho de la línea de tiempo */
+}
+
+/* Estilos de los botones */
+.buttons button {
+  background: none; /* Sin fondo */
+  border: none; /* Sin borde */
+  font-size: 30px; /* Tamaño de fuente */
+  color: #ff00ff; /* Color del texto */
+  cursor: pointer; /* Cursor pointer al pasar el mouse */
+  margin: 0 10px; /* Margen entre botones */
+}
+
+.volume-control input[type="range"] {
+  display: none; /* Ocultar barra deslizante de volumen */
+}
+
+/* Estilo de la barra de búsqueda */
+.search-bar {
+  width: 30%; /* Ancho de la barra de búsqueda */
+  text-align: center; /* Alinear texto al centro */
+  position: relative; /* Posición relativa */
+}
+
+.search-bar input {
+  width: 90%; /* Ancho de la entrada */
+  padding: 10px; /* Relleno */
+  border-radius: 25px; /* Bordes redondeados */
+  border: none; /* Sin borde */
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+  color: #fff; /* Texto blanco */
+  font-size: 16px; /* Tamaño de fuente */
+  margin-bottom: 20px; /* Margen inferior */
+  outline: none; /* Sin borde de enfoque */
+}
+
+.search-bar button {
+  background-color: #ff00ff; /* Fondo del botón */
+  color: #fff; /* Texto blanco */
+  padding: 10px; /* Relleno */
+  border-radius: 25px; /* Bordes redondeados */
+  border: none; /* Sin borde */
+  cursor: pointer; /* Cursor pointer */
+  transition: background-color 0.3s ease; /* Transición de color */
+}
+
+.search-bar button:hover {
+  background-color: #e600e6; /* Color de fondo al pasar el mouse */
 }
 
 .results {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+  padding: 10px; /* Relleno */
+  border-radius: 15px; /* Bordes redondeados */
 }
 
-.results div {
-  background-color: #1f1f1f;
-  padding: 15px;
-  margin: 10px;
-  border: 2px solid #00ffcc; /* Borde neón */
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 255, 204, 0.7); /* Sombra neón */
-  transition: transform 0.3s ease;
+.search-result {
+  padding: 10px; /* Relleno */
+  cursor: pointer; /* Cursor pointer */
+  transition: background-color 0.3s ease; /* Transición de color */
 }
 
-.results div:hover {
-  transform: scale(1.05); /* Efecto de agrandar al pasar el ratón */
+.search-result:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Color al pasar el mouse */
 }
 
-.results img {
-  border-radius: 10px;
-  margin-bottom: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 255, 204, 0.7); /* Sombra en las miniaturas */
+/* Estilo del chat */
+.chat-section {
+  width: 30%; /* Ancho de la sección de chat */
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+  padding: 20px; /* Relleno */
+  border-radius: 15px; /* Bordes redondeados */
+  display: flex; /* Flexbox */
+  flex-direction: column; /* Direccionar el contenido en columna */
+  justify-content: space-between; /* Espacio entre elementos */
 }
 
-iframe {
-  margin-top: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 20px rgba(0, 255, 204, 1); /* Sombra intensa en el reproductor */
-  border: none;
+.chat-header h3 {
+  color: #ff00ff; /* Color del texto */
+  text-align: center; /* Alinear texto al centro */
+  margin-bottom: 10px; /* Margen inferior */
+}
+
+.chat-messages {
+  height: 400px; /* Alto de los mensajes de chat */
+  overflow-y: auto; /* Desplazamiento vertical */
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+  padding: 15px; /* Relleno */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.chat-messages p {
+  margin: 10px 0; /* Margen */
+  padding: 10px; /* Relleno */
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+/* Entrada de chat */
+.chat-input {
+  display: flex; /* Flexbox */
+}
+
+.chat-input input {
+  flex: 1; /* Ocupa el espacio disponible */
+  padding: 10px; /* Relleno */
+  border-radius: 25px; /* Bordes redondeados */
+  border: none; /* Sin borde */
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+  color: #fff; /* Texto blanco */
+  margin-right: 10px; /* Margen derecho */
+  outline: none; /* Sin borde de enfoque */
+}
+
+.chat-input button {
+  background-color: #ff00ff; /* Fondo del botón */
+  color: #fff; /* Texto blanco */
+  border: none; /* Sin borde */
+  border-radius: 25px; /* Bordes redondeados */
+  padding: 10px 20px; /* Relleno */
+  cursor: pointer; /* Cursor pointer */
+  transition: background-color 0.3s ease; /* Transición de color */
+}
+
+.chat-input button:hover {
+  background-color: #e600e6; /* Color al pasar el mouse */
+}
+
+/* Barra lateral de iconos */
+.sidebar {
+  position: absolute; /* Posición absoluta */
+  left: 10px; /* Desde la izquierda */
+  top: 10px; /* Desde arriba */
+  display: flex; /* Flexbox */
+  flex-direction: column; /* Direccionar en columna */
+}
+
+.sidebar button {
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo semitransparente */
+  color: #fff; /* Texto blanco */
+  padding: 10px; /* Relleno */
+  margin-bottom: 10px; /* Margen inferior */
+  border: none; /* Sin borde */
+  border-radius: 25px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor pointer */
+  transition: background-color 0.3s ease; /* Transición de color */
+}
+
+.sidebar button:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Color al pasar el mouse */
 }

@@ -3,52 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escucha música con tu amigo 🎶</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f0f0f0;
-    }
-    .container {
-      margin-top: 50px;
-    }
-    input[type="text"] {
-      padding: 10px;
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      padding: 10px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .results {
-      margin-top: 20px;
-    }
-    iframe {
-      margin-top: 20px;
-    }
-  </style>
+  <title>Reproductor de Música y Chat 🎶💬</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Busca y escucha música con tu amigo 🎶</h1>
-    <input type="text" id="searchQuery" placeholder="Buscar canción...">
-    <button onclick="searchSong()">Buscar</button>
+    <!-- Sección izquierda: Reproductor de música -->
+    <div class="music-player">
+      <div class="album-art">
+        <div id="videoPlayer"></div>
+      </div>
+      <div class="controls">
+        <h2 id="songTitle">Título de la canción</h2>
+        <p id="artistName">Artista</p>
 
-    <div class="results" id="results"></div>
+        <div class="timeline">
+          <input type="range" id="progressBar" value="0" min="0" max="100">
+          <div class="time-info">
+            <span id="currentTime">00:00</span>
+            <span id="totalTime">03:45</span>
+          </div>
+        </div>
 
-    <div id="player"></div>
+        <div class="buttons">
+          <button id="prevBtn">⏮️</button>
+          <button id="playPauseBtn" onclick="playPause()">▶️</button>
+          <button id="nextBtn">⏭️</button>
+        </div>
+
+        <div class="volume-control">
+          <label for="volume">🔊</label>
+          <input type="range" id="volume" value="50" min="0" max="100">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección central: Barra de búsqueda -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar canción...">
+      <button onclick="searchSong()">🔍</button>
+      <div id="searchResults" class="results">
+        <!-- Resultados de búsqueda aparecerán aquí -->
+      </div>
+    </div>
+
+    <!-- Sección derecha: chat en línea -->
+    <div class="chat-section">
+      <div class="chat-header">
+        <h3>Chat en línea</h3>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <!-- Los mensajes aparecerán aquí -->
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Escribe un mensaje...">
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
+     <script src="funciones.js"s></script>
 </body>
 </html>
+

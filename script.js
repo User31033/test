@@ -1,88 +1,59 @@
-// Reemplaza esta clave por la tuya
-const apiKey = 'AIzaSyBnWHeJSEkPKng4qShlwRjpgAwe_yO4DaI';
+let audio = new Audio();
+let isPlaying = false;
+let songs = [];
 
-let player;
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('videoPlayer', {
-    height: '300',
-    width: '300',
-    videoId: '',
-    events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
-  });
+// Lista las canciones en la carpeta TP1
+function loadSongs() {
+    songs = [
+        { title: "Canción 1", url: "TP1/birds of a feather.mp3" },
+        { title: "Canción 2", url: "TP1/song2.mp3" },
+        { title: "Canción 3", url: "TP1/song3.mp3" }
+    ];
+
+    displaySongs();
 }
 
-function onPlayerReady(event) {
-  console.log('El reproductor está listo.');
+// Muestra las canciones en la barra de búsqueda
+function displaySongs() {
+    const resultsDiv = document.getElementById("searchResults");
+    resultsDiv.innerHTML = ""; // Limpia resultados anteriores
+    songs.forEach(song => {
+        const songDiv = document.createElement("div");
+        songDiv.innerText = song.title;
+        songDiv.onclick = () => playSong(song);
+        resultsDiv.appendChild(songDiv);
+    });
 }
 
-function onPlayerStateChange(event) {
-  // Actualiza la UI según el estado del video
+// Reproduce la canción seleccionada
+function playSong(song) {
+    audio.src = song.url;
+    audio.play();
+    isPlaying = true;
+    document.getElementById("playPauseBtn").innerText = "⏸️";
+    document.getElementById("songTitle").innerText = song.title;
 }
 
-function searchSong() {
-  const query = document.getElementById('searchInput').value;
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${query}&key=${apiKey}&maxResults=5`;
-
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const searchResults = document.getElementById('searchResults');
-      searchResults.innerHTML = ''; // Limpiamos los resultados anteriores
-
-      data.items.forEach(item => {
-        const videoId = item.id.videoId;
-        const title = item.snippet.title;
-
-        const resultElement = document.createElement('div');
-        resultElement.classList.add('search-result');
-        resultElement.textContent = title;
-        resultElement.onclick = () => playVideo(videoId, title);
-        searchResults.appendChild(resultElement);
-      });
-    })
-    .catch(error => console.error('Error al buscar videos:', error));
+// Función para filtrar las canciones
+function filterSongs() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    const filteredSongs = songs.filter(song => song.title.toLowerCase().includes(query));
+    displayFilteredSongs(filteredSongs);
 }
 
-function playVideo(videoId, title) {
-  player.loadVideoById(videoId);
-  document.getElementById('songTitle').textContent = title;
-  document.getElementById('artistName').textContent = 'Desconocido'; // Puedes personalizar esto si quieres buscar el artista
+// Muestra las canciones filtradas
+function displayFilteredSongs(filteredSongs) {
+    const resultsDiv = document.getElementById("searchResults");
+    resultsDiv.innerHTML = ""; // Limpia resultados anteriores
+    filteredSongs.forEach(song => {
+        const songDiv = document.createElement("div");
+        songDiv.innerText = song.title;
+        songDiv.onclick = () => playSong(song);
+        resultsDiv.appendChild(songDiv);
+    });
 }
 
-function playPause() {
-  const playPauseBtn = document.getElementById('playPauseBtn');
-  if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-    player.pauseVideo();
-    playPauseBtn.innerText = '▶️';
-  } else {
-    player.playVideo();
-    playPauseBtn.innerText = '⏸️';
-  }
-}
-
-function sendMessage() {
-  const chatInput = document.getElementById('chatInput');
-  const chatMessages = document.getElementById('chatMessages');
-
-  const message = document.createElement('p');
-  message.textContent = chatInput.value;
-  chatMessages.appendChild(message);
-  chatInput.value = '';
-}
-
-function enterRoom() {
-  alert('Entraste a la sala');
-}
-
-function leaveRoom() {
-  alert('Saliste de la sala');
-}
-
-// Cargar el script de YouTube Iframe API
-const tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+// Carga las canciones al iniciar la página
+window.onload = () => {
+    loadSongs();  // Carga las canciones al iniciar la página
+};

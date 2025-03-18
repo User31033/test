@@ -3,14 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login con Spotify</title>
+    <title>Spotify Web App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Iniciar Sesión con Spotify</h1>
+        <h1>Conéctate con Spotify</h1>
         <button id="loginBtn">Login con Spotify</button>
-        <div id="userInfo"></div>
+        
+        <div id="userInfo" style="display: none;">
+            <h2>Perfil</h2>
+            <img id="userImage" src="" alt="Imagen de perfil" style="display: none;">
+            <p><strong>Nombre:</strong> <span id="userName"></span></p>
+            <p><strong>Correo:</strong> <span id="userEmail"></span></p>
+
+            <h3>Tus Playlists</h3>
+            <ul id="playlists"></ul>
+
+            <h3>Buscar Canción</h3>
+            <input type="text" id="searchInput" placeholder="Buscar canción..." />
+            <button id="searchBtn">Buscar</button>
+            <ul id="searchResults"></ul>
+        </div>
+
         <button id="logoutBtn" style="display: none;">Cerrar Sesión</button>
     </div>
 

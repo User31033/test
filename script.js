@@ -1,5 +1,5 @@
 const clientId = "8a72c11826f14c4aa20d73b2267d2d1d";
-const redirectUri = window.location.origin; // Redirigir a la misma página después del login
+const redirectUri =https:"//user31033.github.io/test" ; // Redirigir a la misma página después del login
 let accessToken = "";
 
 // URL para autorizar a Spotify

@@ -1,5 +1,5 @@
 const clientId = "8a72c11826f14c4aa20d73b2267d2d1d";  // 🔹 Reemplaza con tu Client ID de Spotify
-const redirectUri = "https://TU_USUARIO.github.io/TU_REPOSITORIO/";  // 🔹 Cambia con tu GitHub Pages URL
+const redirectUri = "https://user31033.github.io/test/";  // 🔹 Cambia con tu GitHub Pages URL
 const scope = "user-read-private user-read-email"; 
 
 const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;

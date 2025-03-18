@@ -19,14 +19,34 @@ button {
     background-color: #ffffff;
     color: #1db954;
     border: none;
-    padding: 15px;
-    font-size: 18px;
+    padding: 10px;
+    font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 10px 0;
 }
 
 button:hover {
-    background-color: #ddd;
+    background-color: #eeeeee;
 }
 
+input {
+    width: 80%;
+    padding: 8px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    background: #ffffff;
+    color: black;
+    margin: 5px;
+    padding: 10px;
+    border-radius

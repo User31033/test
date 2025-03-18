@@ -1,18 +1,18 @@
 const clientId = "8a72c11826f14c4aa20d73b2267d2d1d";
-const redirectUri = window.location.origin; // Redirigir a la misma página después del login
+const redirectUri = "http://127.0.0.1:5500"; // ¡Cambia esto si usas otro servidor!
 let accessToken = "";
 
-// URL para autorizar a Spotify
+// URL de autenticación de Spotify
 const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user-read-private user-read-email`;
 
-// Manejar el token de la URL después de iniciar sesión
+// Manejar el token después del login
 function handleAuthCallback() {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
     accessToken = params.get("access_token");
 
     if (accessToken) {
-        window.history.replaceState({}, document.title, "/"); // Quitar token de la URL
+        window.history.replaceState({}, document.title, "/"); // Limpiar la URL
         document.getElementById("loginButton").style.display = "none";
         document.getElementById("searchInput").disabled = false;
         document.getElementById("searchButton").disabled = false;

@@ -1,102 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reproductor Streaming Neumorfista</title>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div class="app-container">
-    <!-- Barra lateral -->
-    <aside class="sidebar">
-      <h1 class="logo">MusicFlow</h1>
-      <nav class="menu">
-        <ul>
-          <li><i class="fa fa-home"></i> Inicio</li>
-          <li><i class="fa fa-search"></i> Buscar</li>
-          <li><i class="fa fa-heart"></i> Favoritos</li>
-          <li><i class="fa fa-music"></i> Biblioteca</li>
-          <li><i class="fa fa-user"></i> Mi Cuenta</li>
-        </ul>
-      </nav>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+    text-align: center;
+    padding: 50px;
+}
 
-      <!-- Toggle para Modo Oscuro -->
-      <div class="dark-mode-toggle">
-        <input type="checkbox" id="dark-mode" />
-        <label for="dark-mode">🌙</label>
-      </div>
-    </aside>
+.container {
+    max-width: 400px;
+    margin: auto;
+    padding: 20px;
+    background: #1db954;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+}
 
-    <!-- Contenido principal -->
-    <main class="main-content">
-      <h2>Explorar</h2>
-      <!-- Buscador -->
-      <div class="search-bar">
-        <input type="text" id="search" placeholder="Buscar música..." />
-        <button><i class="fa fa-search"></i> Buscar</button>
-      </div>
+button {
+    background-color: #ffffff;
+    color: #1db954;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
 
-      <!-- Lista de Álbumes -->
-      <div class="card-grid">
-        <div class="card">
-         <img src="https://imgur.com/gallery/chappel-roan-tiny-desk-cZq3bCo" alt="Album 1">
-          <p>Álbum 1</p>
-          <button class="fav-btn"><i class="fa fa-heart"></i> Favoritos</button>
-        </div>
-        <div class="card">
-          <img src="album2.jpg" alt="Album 2">
-          <p>Álbum 2</p>
-          <button class="fav-btn"><i class="fa fa-heart"></i> Favoritos</button>
-        </div>
-        <div class="card">
-          <img src="album3.jpg" alt="Album 3">
-          <p>Álbum 3</p>
-          <button class="fav-btn"><i class="fa fa-heart"></i> Favoritos</button>
-        </div>
-        <div class="card">
-          <img src="album4.jpg" alt="Album 4">
-          <p>Álbum 4</p>
-          <button class="fav-btn"><i class="fa fa-heart"></i> Favoritos</button>
-        </div>
-      </div>
-
-      <!-- Información del Artista -->
-      <div class="artist-info">
-        <h3>Sobre el Artista</h3>
-        <div class="artist-card">
-          <img src="artist.jpg" alt="Artista">
-          <div class="artist-details">
-            <h4>Nombre del Artista</h4>
-            <p>Género: Pop, Rock</p>
-            <p>Seguidores: 1M+</p>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <!-- Barra de reproducción -->
-    <footer class="footer-player">
-      <div class="current-track">
-        <img src="cover.jpg" alt="Now Playing">
-        <div>
-          <h4 id="song-title">Canción en reproducción</h4>
-          <p id="song-artist">Artista</p>
-        </div>
-      </div>
-      <div class="controls">
-        <button class="control-button"><i class="fa fa-backward"></i></button>
-        <button class="control-button"><i class="fa fa-play"></i></button>
-        <button class="control-button"><i class="fa fa-forward"></i></button>
-      </div>
-      <div class="volume-container">
-        <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
-      </div>
-    </footer>
-      
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+button:hover {
+    background-color: #ddd;
+}

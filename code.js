@@ -84,3 +84,14 @@ document.getElementById("searchButton").addEventListener("click", searchSong);
 
 // Verificar si hay un token en la URL (después del login)
 handleAuthCallback();
+
+// Si hay al menos una canción en la lista, actualiza su fondo
+if (data.tracks.items.length > 0) {
+    const firstSong = data.tracks.items[0];
+    const firstSongElement = document.querySelector(".song:first-child");
+
+    if (firstSongElement) {
+        firstSongElement.style.backgroundImage = `url('${firstSong.album.images[0].url}')`;
+        firstSongElement.querySelector("::before").style.backgroundImage = `url('${firstSong.album.images[0].url}')`;
+    }
+}

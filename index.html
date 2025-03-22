@@ -34,7 +34,7 @@
             resultadosDiv.innerHTML = "";
             
             try {
-                let response = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}`);
+                let response = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=music_songs`);
                 let data = await response.json();
                 
                 if (!data.items || data.items.length === 0) {

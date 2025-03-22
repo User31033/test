@@ -18,14 +18,16 @@ async function searchMusic() {
                 <img src="${item.thumbnail}" width="120">
                 <p>${item.title}</p>
             `;
-            videoElement.onclick = () => playMusic(item.url);
-            resultsContainer.appendChild(videoElement);
+videoElement.onclick = () => playMusic(item.url.split("watch?v=")[1]); 
+
         });
     } catch (error) {
         resultsContainer.innerHTML = 'Error al buscar música.';
     }
 }
 
-function playMusic(videoUrl) {
-    document.getElementById('playerFrame').src = videoUrl;
+function playMusic(videoId) {
+    const pipedInstance = "https://piped.video"; // Puedes cambiarlo por otra instancia si es necesario
+    document.getElementById('playerFrame').src = `${pipedInstance}/watch?v=${videoId}`;
 }
+

@@ -20,6 +20,8 @@
     <div class="audio-container" id="audioContainer"></div>
 
     <script>
+        const PIPED_INSTANCE = "https://pipedapi.kavin.rocks"; // Nueva instancia
+        
         async function buscarMusica() {
             let query = document.getElementById("searchQuery").value;
             let status = document.getElementById("status");
@@ -34,7 +36,7 @@
             resultadosDiv.innerHTML = "";
             
             try {
-                let response = await fetch(`https://api.piped.video/search?q=${encodeURIComponent(query)}`);
+                let response = await fetch(`${PIPED_INSTANCE}/search?q=${encodeURIComponent(query)}`);
                 let data = await response.json();
                 
                 if (!data.items || data.items.length === 0) {
@@ -62,7 +64,7 @@
             audioContainer.innerHTML = "Cargando audio...";
             
             try {
-                let response = await fetch(`https://api.piped.video/streams/${videoId}`);
+                let response = await fetch(`${PIPED_INSTANCE}/streams/${videoId}`);
                 let data = await response.json();
                 
                 if (!data.audioStreams || data.audioStreams.length === 0) {

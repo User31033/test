@@ -3,85 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suno - Buscar y Reproducir Música</title>
+    <title>Reproductor Piped</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        input, button { padding: 10px; font-size: 16px; margin: 10px; }
-        #results { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; }
-        .video-item { margin: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; width: 250px; text-align: center; cursor: pointer; }
-        img { width: 100%; border-radius: 8px; }
-        #playerContainer { display: none; margin-top: 20px; }
-        #cover { width: 300px; border-radius: 8px; display: block; margin: auto; }
-        audio { margin-top: 10px; width: 100%; }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        input { width: 80%; padding: 10px; }
+        button { padding: 10px; margin: 5px; cursor: pointer; }
+        .video-container { margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>Suno 🎵</h1>
-    <input type="text" id="searchInput" placeholder="Buscar música...">
-    <button onclick="searchMusic()">Buscar</button>
-
-    <div id="results"></div>
-
-    <div id="playerContainer">
-        <h2>Reproduciendo:</h2>
-        <img id="cover" src="" alt="Carátula">
-        <audio id="audioPlayer" controls></audio>
-    </div>
+    <h1>Reproductor de Música con Piped</h1>
+    <input type="text" id="searchQuery" placeholder="Buscar música...">
+    <button onclick="buscarMusica()">Buscar</button>
+    <p id="status"></p>
+    <div id="resultados"></div>
+    <div class="video-container" id="videoContainer"></div>
 
     <script>
-        async function searchMusic() {
-            let query = document.getElementById("searchInput").value;
-            let resultsDiv = document.getElementById("results");
-
+        async function buscarMusica() {
+            let query = document.getElementById("searchQuery").value;
+            let status = document.getElementById("status");
+            let resultadosDiv = document.getElementById("resultados");
+            
             if (!query) {
-                alert("Por favor, ingresa un término de búsqueda.");
+                alert("Ingresa una búsqueda");
                 return;
             }
-
-            resultsDiv.innerHTML = "Buscando...";
+            
+            status.innerText = "Buscando...";
+            resultadosDiv.innerHTML = "";
             
             try {
                 let response = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}`);
                 let data = await response.json();
-                resultsDiv.innerHTML = ""; 
-
-                if (data.items.length === 0) {
-                    resultsDiv.innerHTML = "<p>No se encontraron resultados.</p>";
+                
+                if (!data.items || data.items.length === 0) {
+                    status.innerText = "No se encontraron resultados";
                     return;
                 }
-
+                
+                status.innerText = "Resultados encontrados:";
+                
                 data.items.forEach(video => {
-                    if (video.type === "video") {
-                        let div = document.createElement("div");
-                        div.classList.add("video-item");
-                        div.innerHTML = `
-                            <img src="${video.thumbnail}" alt="${video.title}">
-                            <p>${video.title}</p>
-                            <button onclick="playAudio('${video.url.split('=')[1]}', '${video.thumbnail}')">🎵 Reproducir</button>
-                        `;
-                        resultsDiv.appendChild(div);
-                    }
+                    let btn = document.createElement("button");
+                    btn.innerText = video.title;
+                    btn.onclick = () => reproducir(video.url);
+                    resultadosDiv.appendChild(btn);
+                    resultadosDiv.appendChild(document.createElement("br"));
                 });
             } catch (error) {
-                resultsDiv.innerHTML = "<p>Error al buscar música.</p>";
-                console.error(error);
+                status.innerText = "Error en la búsqueda";
+                console.error("Error en la API:", error);
             }
         }
-
-        async function playAudio(videoId, thumbnail) {
-            let response = await fetch(`https://pipedapi.kavin.rocks/streams/${videoId}`);
-            let data = await response.json();
-
-            let audioUrl = data.audioStreams?.find(stream => stream.mimeType.includes("audio/mp4"))?.url;
-
-            if (audioUrl) {
-                document.getElementById("playerContainer").style.display = "block";
-                document.getElementById("cover").src = thumbnail;
-                document.getElementById("audioPlayer").src = audioUrl;
-                document.getElementById("audioPlayer").play();
-            } else {
-                alert("No se pudo obtener el audio.");
-            }
+        
+        function reproducir(url) {
+            let videoContainer = document.getElementById("videoContainer");
+            videoContainer.innerHTML = `<iframe width="560" height="315" src="https://piped.video${url}" frameborder="0" allowfullscreen></iframe>`;
         }
     </script>
 </body>

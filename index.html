@@ -34,7 +34,7 @@
             resultadosDiv.innerHTML = "";
             
             try {
-                let response = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=music_songs`);
+                let response = await fetch(`https://api.piped.video/search?q=${encodeURIComponent(query)}&filter=music_songs`);
                 let data = await response.json();
                 
                 if (!data.items || data.items.length === 0) {
@@ -62,7 +62,7 @@
             audioContainer.innerHTML = "Cargando audio...";
             
             try {
-                let response = await fetch(`https://pipedapi.kavin.rocks/streams/${videoId}`);
+                let response = await fetch(`https://api.piped.video/streams/${videoId}`);
                 let data = await response.json();
                 
                 if (!data.audioStreams || data.audioStreams.length === 0) {
@@ -80,4 +80,3 @@
     </script>
 </body>
 </html>
-

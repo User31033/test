@@ -8,7 +8,7 @@
         body { font-family: Arial, sans-serif; text-align: center; }
         input { width: 80%; padding: 10px; }
         button { padding: 10px; margin: 5px; cursor: pointer; }
-        .video-container { margin-top: 20px; }
+        .audio-container { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -17,7 +17,7 @@
     <button onclick="buscarMusica()">Buscar</button>
     <p id="status"></p>
     <div id="resultados"></div>
-    <div class="video-container" id="videoContainer"></div>
+    <div class="audio-container" id="audioContainer"></div>
 
     <script>
         async function buscarMusica() {
@@ -47,7 +47,7 @@
                 data.items.forEach(video => {
                     let btn = document.createElement("button");
                     btn.innerText = video.title;
-                    btn.onclick = () => reproducir(video.url);
+                    btn.onclick = () => reproducirAudio(video.url);
                     resultadosDiv.appendChild(btn);
                     resultadosDiv.appendChild(document.createElement("br"));
                 });
@@ -57,9 +57,10 @@
             }
         }
         
-        function reproducir(url) {
-            let videoContainer = document.getElementById("videoContainer");
-            videoContainer.innerHTML = `<iframe width="560" height="315" src="https://piped.video${url}" frameborder="0" allowfullscreen></iframe>`;
+        function reproducirAudio(url) {
+            let audioContainer = document.getElementById("audioContainer");
+            let audioUrl = `https://pipedapi.kavin.rocks/streams${url}`;
+            audioContainer.innerHTML = `<audio controls autoplay><source src="${audioUrl}" type="audio/mp4">Tu navegador no soporta el elemento de audio.</audio>`;
         }
     </script>
 </body>

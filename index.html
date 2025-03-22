@@ -3,82 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reproductor Piped</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        input { width: 80%; padding: 10px; }
-        button { padding: 10px; margin: 5px; cursor: pointer; }
-        .audio-container { margin-top: 20px; }
-    </style>
+    <title>Piped Music</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Reproductor de Música con Piped</h1>
-    <input type="text" id="searchQuery" placeholder="Buscar música...">
-    <button onclick="buscarMusica()">Buscar</button>
-    <p id="status"></p>
-    <div id="resultados"></div>
-    <div class="audio-container" id="audioContainer"></div>
-
-    <script>
-        const PIPED_INSTANCE = "https://pipedapi.kavin.rocks"; // Nueva instancia
-        
-        async function buscarMusica() {
-            let query = document.getElementById("searchQuery").value;
-            let status = document.getElementById("status");
-            let resultadosDiv = document.getElementById("resultados");
-            
-            if (!query) {
-                alert("Ingresa una búsqueda");
-                return;
-            }
-            
-            status.innerText = "Buscando...";
-            resultadosDiv.innerHTML = "";
-            
-            try {
-                let response = await fetch(`${PIPED_INSTANCE}/search?q=${encodeURIComponent(query)}`);
-                let data = await response.json();
-                
-                if (!data.items || data.items.length === 0) {
-                    status.innerText = "No se encontraron resultados";
-                    return;
-                }
-                
-                status.innerText = "Resultados encontrados:";
-                
-                data.items.forEach(video => {
-                    let btn = document.createElement("button");
-                    btn.innerText = video.title;
-                    btn.onclick = () => obtenerAudio(video.id);
-                    resultadosDiv.appendChild(btn);
-                    resultadosDiv.appendChild(document.createElement("br"));
-                });
-            } catch (error) {
-                status.innerText = "Error en la búsqueda";
-                console.error("Error en la API:", error);
-            }
-        }
-        
-        async function obtenerAudio(videoId) {
-            let audioContainer = document.getElementById("audioContainer");
-            audioContainer.innerHTML = "Cargando audio...";
-            
-            try {
-                let response = await fetch(`${PIPED_INSTANCE}/streams/${videoId}`);
-                let data = await response.json();
-                
-                if (!data.audioStreams || data.audioStreams.length === 0) {
-                    audioContainer.innerText = "No se encontró el audio";
-                    return;
-                }
-                
-                let audioUrl = data.audioStreams[0].url; // Primer enlace de audio disponible
-                audioContainer.innerHTML = `<audio controls autoplay><source src="${audioUrl}" type="audio/mp4">Tu navegador no soporta el elemento de audio.</audio>`;
-            } catch (error) {
-                audioContainer.innerText = "Error al obtener el audio";
-                console.error("Error en la API:", error);
-            }
-        }
-    </script>
+    <div class="sidebar">
+        <h2>Piped Music</h2>
+        <ul>
+            <li>Inicio</li>
+            <li>Biblioteca</li>
+            <li>Playlist</li>
+        </ul>
+    </div>
+    <div class="content">
+        <header>
+            <input type="text" id="search" placeholder="Buscar música...">
+            <button onclick="searchMusic()">Buscar</button>
+        </header>
+        <div id="results"></div>
+    </div>
+    <div class="player">
+        <iframe id="playerFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -3,20 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reproductor Spotify</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Suno - Música con Video o Audio</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        input, button { margin: 10px; padding: 10px; }
+        #results { display: flex; flex-wrap: wrap; justify-content: center; }
+        .video-item { margin: 10px; width: 200px; cursor: pointer; }
+        img { width: 100%; border-radius: 8px; }
+        #playerContainer { display: none; margin-top: 20px; }
+        #cover { width: 300px; border-radius: 8px; display: block; margin: auto; }
+        video, audio { margin-top: 10px; }
+    </style>
 </head>
 <body>
-    <h1>Reproductor Spotify</h1>
-    <button id="loginButton">Iniciar sesión con Spotify</button>
-    <p id="userInfo"></p>
+    <h1>Suno 🎵📺</h1>
+    <input type="text" id="searchInput" placeholder="Buscar música...">
+    <button onclick="searchMusic()">Buscar</button>
 
-    <input type="text" id="searchInput" placeholder="Buscar canción..." disabled />
-    <button id="searchButton" disabled>Buscar</button>
-    
     <div id="results"></div>
-    <div id="errorMessage" class="error"></div>
 
-    <script src="code.js"></script>
+    <div id="playerContainer">
+        <h2>Reproduciendo:</h2>
+        <img id="cover" src="" alt="Carátula">
+        <video id="videoPlayer" controls width="640" style="display:none;"></video>
+        <audio id="audioPlayer" controls></audio>
+        <br>
+        <button onclick="toggleMode()">Cambiar a Video</button>
+    </div>
+
+    <script>
+        let isVideoMode = false; // Modo por defecto: solo audio
+
+        async function searchMusic() {
+            let query = document.getElementById("searchInput").value;
+            let response = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}`);
+            let data = await response.json();
+
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ""; // Limpiar resultados anteriores
+
+            data.items.forEach(video => {
+                if (video.type === "video") {
+                    let div = document.createElement("div");
+                    div.classList.add("video-item");
+                    div.innerHTML = `
+                        <img src="${video.thumbnail}" alt="${video.title}">
+                        <p>${video.title}</p>
+                    `;
+                    div.onclick = () => playMedia(video.url.split("=")[1], video.thumbnail);
+                    resultsDiv.appendChild(div);
+                }
+            });
+        }
+
+        async function playMedia(videoId, thumbnail) {
+            let response = await fetch(`https://pipedapi.kavin.rocks/streams/${videoId}`);
+            let data = await response.json();
+
+            let audioUrl = data.audioStreams?.find(stream => stream.mimeType.includes("audio/mp4"))?.url;
+            let videoUrl = data.videoStreams?.find(stream => stream.mimeType.includes("video/mp4"))?.url;
+
+            if (audioUrl && videoUrl) {
+                document.getElementById("playerContainer").style.display = "block";
+                document.getElementById("cover").src = thumbnail;
+                document.getElementById("audioPlayer").src = audioUrl;
+                document.getElementById("videoPlayer").src = videoUrl;
+                document.getElementById("audioPlayer").play();
+                isVideoMode = false;
+                updateButton();
+            } else {
+                alert("No se pudo obtener la música.");
+            }
+        }
+
+        function toggleMode() {
+            isVideoMode = !isVideoMode;
+
+            if (isVideoMode) {
+                document.getElementById("audioPlayer").pause();
+                document.getElementById("audioPlayer").style.display = "none";
+                document.getElementById("videoPlayer").style.display = "block";
+                document.getElementById("videoPlayer").play();
+                document.getElementById("cover").style.display = "none";
+            } else {
+                document.getElementById("videoPlayer").pause();
+                document.getElementById("videoPlayer").style.display = "none";
+                document.getElementById("audioPlayer").style.display = "block";
+                document.getElementById("audioPlayer").play();
+                document.getElementById("cover").style.display = "block";
+            }
+
+            updateButton();
+        }
+
+        function updateButton() {
+            document.querySelector("button[onclick='toggleMode()']").textContent = isVideoMode ? "Cambiar a Audio" : "Cambiar a Video";
+        }
+    </script>
 </body>
 </html>

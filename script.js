@@ -1,4 +1,4 @@
-const pipedApiUrl = "https://pipedapi.leptons.xyz"; // Puedes cambiarla si es necesario
+const pipedApiUrl = "https://api.piped.yt"; // Puedes cambiarla si es necesario
 
 async function searchMusic() {
     const query = document.getElementById('search').value;

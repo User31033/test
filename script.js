@@ -1,4 +1,5 @@
 const YT_API_KEY = "AIzaSyBnWHeJSEkPKng4qShlwRjpgAwe_yO4DaI"; // Reemplázala con tu clave de API de YouTube
+const pipedApiUrl = "https://pipedapi.kavin.rocks"; // Instancia de API de Piped
 
 async function searchMusic() {
     const query = document.getElementById('search').value;
@@ -21,7 +22,7 @@ async function searchMusic() {
                 <img src="${item.snippet.thumbnails.default.url}" width="120">
                 <p>${item.snippet.title}</p>
             `;
-            videoElement.onclick = () => playMusic(videoId);
+            videoElement.onclick = () => getAudioUrl(videoId, item.snippet.title);
             resultsContainer.appendChild(videoElement);
         });
     } catch (error) {
@@ -29,7 +30,27 @@ async function searchMusic() {
     }
 }
 
-function playMusic(videoId) {
-    const pipedInstance = "https://piped.video"; // Instancia de Piped
-    document.getElementById('playerFrame').src = `${pipedInstance}/watch?v=${videoId}`;
+async function getAudioUrl(videoId, title) {
+    try {
+        const response = await fetch(`${pipedApiUrl}/streams/${videoId}`);
+        const data = await response.json();
+
+        if (data.audioStreams && data.audioStreams.length > 0) {
+            const bestAudio = data.audioStreams[0].url; // URL del mejor audio disponible
+            playMusic(bestAudio, title);
+        } else {
+            alert("No se encontró un enlace de audio disponible.");
+        }
+    } catch (error) {
+        alert("Error al obtener el audio.");
+    }
+}
+
+function playMusic(audioUrl, title) {
+    const audioPlayer = document.getElementById("audioPlayer");
+    const trackTitle = document.getElementById("trackTitle");
+
+    audioPlayer.src = audioUrl;
+    trackTitle.textContent = title;
+    audioPlayer.play();
 }

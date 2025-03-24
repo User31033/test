@@ -1,5 +1,5 @@
 const YT_API_KEY = "AIzaSyBnWHeJSEkPKng4qShlwRjpgAwe_yO4DaI"; // Reemplázala con tu clave de API de YouTube
-const pipedApiUrl = "https://pipedapi.kavin.rocks"; // Instancia de API de Piped
+const pipedApiUrl = "https://pipedapi.mha.fi"; 
 
 async function searchMusic() {
     const query = document.getElementById('search').value;

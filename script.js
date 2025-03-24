@@ -1,5 +1,4 @@
-const YT_API_KEY = "AIzaSyBnWHeJSEkPKng4qShlwRjpgAwe_yO4DaI"; // Reemplázala con tu clave de API de YouTube
-const pipedApiUrl = "https://yapi.vyper.me"; 
+const pipedApiUrl = "https://yapi.vyper.me"; // Puedes cambiarla si es necesario
 
 async function searchMusic() {
     const query = document.getElementById('search').value;
@@ -9,20 +8,20 @@ async function searchMusic() {
     resultsContainer.innerHTML = 'Buscando...';
 
     try {
-        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&videoCategoryId=10&key=${YT_API_KEY}`);
+        const response = await fetch(`${pipedApiUrl}/search?q=${encodeURIComponent(query)}&filter=music_songs`);
         const data = await response.json();
 
         resultsContainer.innerHTML = '';
 
         data.items.forEach(item => {
-            const videoId = item.id.videoId;
+            const videoId = item.url.split("watch?v=")[1];
             const videoElement = document.createElement('div');
             videoElement.className = 'video-item';
             videoElement.innerHTML = `
-                <img src="${item.snippet.thumbnails.default.url}" width="120">
-                <p>${item.snippet.title}</p>
+                <img src="${item.thumbnail}" width="120">
+                <p>${item.title}</p>
             `;
-            videoElement.onclick = () => getAudioUrl(videoId, item.snippet.title);
+            videoElement.onclick = () => getAudioUrl(videoId, item.title);
             resultsContainer.appendChild(videoElement);
         });
     } catch (error) {

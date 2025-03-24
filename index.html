@@ -3,30 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piped Music</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Spotube Replica</title>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Piped Music</h2>
-        <ul>
-            <li>Inicio</li>
-            <li>Biblioteca</li>
-            <li>Playlist</li>
-        </ul>
-    </div>
-    <div class="content">
-        <header>
-            <input type="text" id="search" placeholder="Buscar música...">
-            <button onclick="searchMusic()">Buscar</button>
-        </header>
-        <div id="results"></div>
-    </div>
- <div class="audio-player-container">
+    <h1>Buscador de Música</h1>
+    <input type="text" id="search" placeholder="Buscar canción">
+    <button onclick="searchMusic()">Buscar</button>
+    <div id="results"></div>
+
+    <h2>Reproductor</h2>
     <p id="trackTitle">Ninguna canción en reproducción</p>
     <audio id="audioPlayer" controls></audio>
-</div>
 
-    <script src="script.js"></script>
+    <script>
+        async function searchMusic() {
+            const query = document.getElementById('search').value;
+            if (!query) return;
+
+            const response = await fetch(`http://127.0.0.1:5000/search?q=${encodeURIComponent(query)}`);
+            const results = await response.json();
+            
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            results.forEach(song => {
+                const songElement = document.createElement('div');
+                songElement.innerHTML = `
+                    <img src="${song.thumbnail}" width="100">
+                    <p>${song.title} - ${song.artist}</p>
+                    <button onclick="playMusic('${song.title} ${song.artist}')">Reproducir</button>
+                `;
+                resultsContainer.appendChild(songElement);
+            });
+        }
+
+        async function playMusic(query) {
+            const response = await fetch(`http://127.0.0.1:5000/get_audio?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            document.getElementById("trackTitle").textContent = query;
+            document.getElementById("audioPlayer").src = data.audio_url;
+            document.getElementById("audioPlayer").play();
+        }
+    </script>
 </body>
 </html>

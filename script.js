@@ -31,7 +31,7 @@ async function searchMusic() {
                     <img src="${item.thumbnailUrl}" width="120">
                     <p>${item.title}</p>
                 `;
-                videoElement.onclick = () => getAudioUrl(videoId, item.title);
+                videoElement.onclick = () => playMusicWithIframe(videoId, item.title);
                 resultsContainer.appendChild(videoElement);
             }
         });
@@ -41,27 +41,12 @@ async function searchMusic() {
     }
 }
 
-async function getAudioUrl(videoId, title) {
-    try {
-        const response = await fetch(`${pipedApiUrl}/streams/${videoId}`);
-        const data = await response.json();
+function playMusicWithIframe(videoId, title) {
+    const pipedPlayer = document.getElementById("pipedPlayer");
 
-        if (data.audioStreams && data.audioStreams.length > 0) {
-            const bestAudio = data.audioStreams[0].url;
-            playMusic(bestAudio, title);
-        } else {
-            alert("No se encontró un enlace de audio disponible.");
-        }
-    } catch (error) {
-        alert("Error al obtener el audio.");
-    }
-}
+    // Cargar el video en un iframe oculto para reproducir solo el audio
+    pipedPlayer.src = `https://piped.kavin.rocks/watch?v=${videoId}&autoplay=1`;
+    pipedPlayer.style.display = "block"; // Mostrar el iframe si lo deseas
 
-function playMusic(audioUrl, title) {
-    const audioPlayer = document.getElementById("audioPlayer");
-    const trackTitle = document.getElementById("trackTitle");
-
-    audioPlayer.src = audioUrl;
-    trackTitle.textContent = title;
-    audioPlayer.play();
+    document.getElementById("trackTitle").textContent = title;
 }

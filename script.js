@@ -1,4 +1,5 @@
-const pipedApiUrl = "https://pipedapi.kavin.rocks"; // Puedes cambiarla si es necesario
+const pipedApiUrl = "https://pipedapi.kavin.rocks"; 
+const songLinkApiUrl = "https://api.song.link/v1-alpha.1/search?query=";
 
 async function searchMusic() {
     const query = document.getElementById('search').value;
@@ -8,22 +9,33 @@ async function searchMusic() {
     resultsContainer.innerHTML = 'Buscando...';
 
     try {
-        const response = await fetch(`${pipedApiUrl}/search?q=${encodeURIComponent(query)}&filter=music_songs`);
+        // Buscar canción en SongLink
+        const response = await fetch(songLinkApiUrl + encodeURIComponent(query));
         const data = await response.json();
+
+        if (!data.entitiesByUniqueId) {
+            resultsContainer.innerHTML = 'No se encontraron resultados.';
+            return;
+        }
 
         resultsContainer.innerHTML = '';
 
-        data.items.forEach(item => {
-            const videoId = item.url.split("watch?v=")[1];
-            const videoElement = document.createElement('div');
-            videoElement.className = 'video-item';
-            videoElement.innerHTML = `
-                <img src="${item.thumbnail}" width="120">
-                <p>${item.title}</p>
-            `;
-            videoElement.onclick = () => getAudioUrl(videoId, item.title);
-            resultsContainer.appendChild(videoElement);
+        Object.values(data.entitiesByUniqueId).forEach(item => {
+            if (item.platforms && item.platforms.youtube) {
+                const youtubeUrl = item.platforms.youtube.url;
+                const videoId = youtubeUrl.split("v=")[1];
+
+                const videoElement = document.createElement('div');
+                videoElement.className = 'video-item';
+                videoElement.innerHTML = `
+                    <img src="${item.thumbnailUrl}" width="120">
+                    <p>${item.title}</p>
+                `;
+                videoElement.onclick = () => getAudioUrl(videoId, item.title);
+                resultsContainer.appendChild(videoElement);
+            }
         });
+
     } catch (error) {
         resultsContainer.innerHTML = 'Error al buscar música.';
     }
@@ -35,7 +47,7 @@ async function getAudioUrl(videoId, title) {
         const data = await response.json();
 
         if (data.audioStreams && data.audioStreams.length > 0) {
-            const bestAudio = data.audioStreams[0].url; // URL del mejor audio disponible
+            const bestAudio = data.audioStreams[0].url;
             playMusic(bestAudio, title);
         } else {
             alert("No se encontró un enlace de audio disponible.");

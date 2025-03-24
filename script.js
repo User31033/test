@@ -1,5 +1,4 @@
 const pipedApiUrl = "https://pipedapi.kavin.rocks"; 
-const songLinkApiUrl = "https://api.song.link/v1-alpha.1/search?query=";
 
 async function searchMusic() {
     const query = document.getElementById('search').value;
@@ -9,26 +8,25 @@ async function searchMusic() {
     resultsContainer.innerHTML = 'Buscando...';
 
     try {
-        // Buscar canción en SongLink
-        const response = await fetch(songLinkApiUrl + encodeURIComponent(query));
+        // Buscar en Piped directamente
+        const response = await fetch(`${pipedApiUrl}/search?q=${encodeURIComponent(query)}`);
         const data = await response.json();
 
-        if (!data.entitiesByUniqueId) {
+        if (!data.items || data.items.length === 0) {
             resultsContainer.innerHTML = 'No se encontraron resultados.';
             return;
         }
 
         resultsContainer.innerHTML = '';
 
-        Object.values(data.entitiesByUniqueId).forEach(item => {
-            if (item.platforms && item.platforms.youtube) {
-                const youtubeUrl = item.platforms.youtube.url;
-                const videoId = youtubeUrl.split("v=")[1];
+        data.items.forEach(item => {
+            if (item.url.includes("/watch?v=")) {
+                const videoId = item.url.split("/watch?v=")[1];
 
                 const videoElement = document.createElement('div');
                 videoElement.className = 'video-item';
                 videoElement.innerHTML = `
-                    <img src="${item.thumbnailUrl}" width="120">
+                    <img src="${item.thumbnail}" width="120">
                     <p>${item.title}</p>
                 `;
                 videoElement.onclick = () => playMusicWithIframe(videoId, item.title);
